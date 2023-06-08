@@ -4,8 +4,10 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Brain Blast</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+    
+    <!-- Display page only when loaded -->
     <style>
         [v-cloak] {
             display: none;
@@ -14,75 +16,99 @@
 </head>
 <body>
 
+    <!-- Header of webpage -->
     <header class="text-bg-secondary p-3">
+        <!-- Webpage name -->
         <h1> 
-            <!-- <a href="#"> -->
-                <span class="text-primary">B</span><span class="text-danger">r</span><span class="text-warning">a</span><span class="text-light-emphasis">i</span><span class="text-info">n</span> Blast</h1>
-            <!-- </a> -->
+            <span class="text-primary">B</span><span class="text-danger">r</span><span class="text-warning">a</span><span class="text-light-emphasis">i</span><span class="text-info">n</span> Blast
+        </h1>
     </header>
 
-    <br>
-    <br>
-    <div id="app" v-cloak>
-        <div class="row">
-            <p v-if="isStartOfGame" class="text-center">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla in quam vitae neque dapibus luctus. Mauris varius non turpis sed fringilla. Etiam sed convallis diam. Aliquam erat volutpat. Fusce nec interdum quam, nec facilisis urna. Morbi dictum ipsum ac pharetra ultrices. Curabitur quis aliquet orci, ut rhoncus erat. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam vestibulum elit in lacinia varius. Praesent ante tortor, pellentesque elementum nibh sit amet, ornare malesuada sapien. Mauris porta sagittis orci, sed porttitor dolor tincidunt ac. Sed nec lobortis ipsum.</p>
-            <h4 v-else-if="gameHasStarted" class="text-center"> Question {{ index + 1 }} of 10 </h4>
-        </div>
-        <br>
-        <br>
+    <!-- Render app -->
+    <div id="app" v-cloak class="pt-4">
 
-        <div class="container text-center">
-            <div v-if="isStartOfGame" class="btn-toolbar row justify-items-center" role="toolbar" aria-label="Toolbar with button groups">    
-                <div v-for="level in levels" class="btn-group me-2 col-xs-12 col-sm-12 col-md" role="group" aria-label="First group">
-                    <button @click="startGame(level)" style="margin: 5px;" type="button" class="btn btn-outline-dark">{{ level }}</button>
-                </div>
-                
+        <!-- Display start of game -->
+        <div v-if="isStartOfGame">
+
+            <!-- Welcome users and describe game -->
+           <div class="row">
+                <p class="text-center">Welcome to Trivia Central, the ultimate trivia game! Here, you can test your knowledge on a wide range of topics, from history and science to pop culture and current events. With over many questions to choose from, you'll never run out of challenges.</p>
+
+                <p class="text-center">To get started, simply choose a difficulty level. Then, answer as many questions as you can in a row without getting a wrong answer. The more questions you answer correctly, the higher your score will be.</p>
+                    
+                <!-- <p class="text-center">You can also compete against other players in the online leaderboard. So, what are you waiting for? Start playing today and see how much you know!</p> --> 
             </div>
-            
-            <div v-else-if="gameHasStarted">
-                <div v-for="(question, i) in questions" :key="i">
-                    <div v-if="i == index && index < 10">
-                        <div class="row text-center">
-                            <p v-html="question.question"></p>
-                        </div>
-                        <br>
-                        <br>
-                        <div v-else class="btn-toolbar row justify-items-center" role="toolbar" aria-label="Toolbar with button groups">   
-                            <div class="btn-group me-2 col-xs-12 col-sm-12 col-md" role="group" aria-label="First group">
-                                <button @click="verifyAnswer(question, question.correct_answer)" v-html="question.correct_answer" style="margin: 5px;" type="button" class="btn btn-outline-dark"></button>
-                            </div>
-                            <div v-for="answer in question.incorrect_answers" class="btn-group me-2 col-xs-12 col-sm-12 col-md" role="group" aria-label="First group">
-                                <button @click="verifyAnswer(question, answer)" v-html="answer" style="margin: 5px;" type="button" class="btn btn-outline-dark"></button>
-                            </div>
-                        </div>
+
+            <!-- Display levels as buttons -->
+            <div class="container text-center">
+                <div class="btn-toolbar row justify-items-center" role="toolbar" aria-label="Toolbar with button groups">    
+                    <div v-for="level in levels" class="btn-group me-2 col-xs-12 col-sm-12 col-md" role="group" aria-label="First group">
+                        <!-- Start game, with corresponding level when clicked -->
+                        <button @click="startGame(level)" type="button" class="btn btn-outline-dark m-1">{{ level }}</button>
                     </div>
                 </div>
             </div>
         </div>
+
+        <!-- Display game -->
+        <div v-else-if="gameHasStarted" class="container text-center">
+            
+            <!-- question number -->
+            <h4 class="text-center mb-2"> Question {{ index + 1 }} of 10 </h4>
+            
+            <!-- Question with possible answers -->
+            <div v-for="(question, i) in questions" :key="i">
+                <div v-if="i == index && index < 10">
+
+                    <!-- Question -->
+                    <div class="row text-center">
+                        <p v-html="question.question"><!-- text of question --></p>
+                    </div>
+
+                    <!-- Answers -->
+                    <div v-else class="btn-toolbar row justify-items-center" role="toolbar" aria-label="Toolbar with button groups">   
+                        <!-- Correct answer -->
+                        <div class="btn-group me-2 col-xs-12 col-sm-12 col-md" role="group" aria-label="First group">
+                            <button @click="verifyAnswer(question, question.correct_answer)" v-html="question.correct_answer" type="button" class="btn btn-outline-dark m-1"><!-- correct answer of question --></button>
+                        </div>
+
+                        <!-- Incorrect answers -->
+                        <div v-for="answer in question.incorrect_answers" class="btn-group me-2 col-xs-12 col-sm-12 col-md" role="group" aria-label="First group">
+                            <button @click="verifyAnswer(question, answer)" v-html="answer"type="button" class="btn btn-outline-dark m-1"><!-- incorrect answer of question --></button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
         
+        <!-- End of game -->
         <div v-if="gameHasEnded" class="container text-center">
-            <div>
+            <!-- Display score -->
+            <div class="mb-1">
                 <h3>Your score: {{ score }}</h3>
             </div>
+
+            <!-- Display restart button -->
             <div class="btn-toolbar row justify-items-center">
                 <div class="btn-group me-2 col-xs-12 col-sm-12 col-md">
                     <button @click="restartGame" type="button" class="btn btn-outline-dark">Play Again</button>
                 </div>
             </div>
-        </div>
-        
 
+        </div>
     </div>
-    <br>
-    <br>
-    
+
+    <!-- Footer -->
     <footer class="bd-footer py-4 py-md-5 mt-5 bg-body-tertiary">
         <div class="container text-center text-body-secondary">
             <div class="row">
                 <div class="mb-3">
-                    <h4>Technologies used and Information</h4>
+
+                    <!-- Information -->
+                    <h4>Technologies utilized and Information</h4>
                     <ul class="list-unstyled small">
-                        <li class="mb-2">Styled using CSS based on <a href="https://getbootstrap.com/">Bootstrap</a>.</li>
+                        <li class="mb-2">Styled using <a href="https://getbootstrap.com/">Bootstrap</a>.</li>
                         <li class="mb-2">Made interactive using Javascript from <a href="https://vuejs.org/">Vue</a>.</li>
                         <li class="mb-2">Currently v1.0</li>
                     </ul>
@@ -113,60 +139,6 @@
     </footer>
 
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
-    <script>
-        const { createApp } = Vue; 
-
-        createApp({
-            data() {
-                return {
-                    isStartOfGame: true,
-                    gameHasStarted: false,
-                    gameHasEnded: false,
-                    results: [],
-                    index: 0,
-                    score: 0,
-                    levels: ["Easy", "Medium", "Hard"],
-                    level: "",
-                    questions: []
-                }
-            },
-            methods: {
-                startGame(level) {
-                    this.isStartOfGame = false
-                    this.gameHasStarted = true
-                    this.level = level.toLowerCase()
-                    this.results = this.results.results
-                    this.questions = this.results.filter(function(question) {
-                        return question.difficulty === level.toLowerCase()
-                    })
-                    console.log(this.questions)
-                },
-                restartGame() {
-                        window.location.reload()
-                },
-                incrementAndDisplayEnd() {
-                    if (this.index == 9) {
-                        this.gameHasStarted = false
-                        this.gameHasEnded = true
-                    } else {
-                        this.index++
-                    }
-                },
-                verifyAnswer(question, answer) {
-                    
-                    if (answer ==  question.correct_answer) this.score ++
-                    console.log(answer)
-                    console.log(this.score)
-                    this.incrementAndDisplayEnd()
-                }
-            },
-            async mounted() {
-                const res = await fetch('https://opentdb.com/api.php?amount=50&type=multiple')
-                const data = await res.json()
-                this.results = data
-            }
-        }).mount('#app')
-
-    </script>
+    <script src="app.js"></script>
 </body>
 </html>
